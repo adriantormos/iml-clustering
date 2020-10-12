@@ -5,7 +5,7 @@ import os
 
 
 def load_arff(dataset_name: str):
-    f = open(os.path.abspath(os.path.join('datasets', 'datasets', dataset_name + '.arff')))
+    f = open(os.path.abspath(os.path.join('..', 'datasets', 'all', dataset_name + '.arff')))
     data, metadata = loadarff(f)
     return data, metadata
 

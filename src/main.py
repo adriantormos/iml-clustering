@@ -1,7 +1,8 @@
 from auxiliary import get_processed_kropt
 from sklearn.cluster import DBSCAN
 import pandas as pd
-from src.algorithms import kmeans
+import numpy as np
+from src.algorithms import kmeans, bisecting_kmeans
 
 
 if __name__ == '__main__':
@@ -18,6 +19,13 @@ if __name__ == '__main__':
     #         print(pd.Series(labels).value_counts())
     #         print(pd.Series(labels_b).value_counts())
 
-    x = kmeans(kropt, n_clusters=16, max_iter=300, verbose=True)
+    x = kmeans(kropt, n_clusters=16, max_iter=300, verbose=False)
     print(x[:20])
+    unique, frequency = np.unique(x, return_counts=True)
+    print('\n'.join(['{}: {}'.format(unique[i], frequency[i]) for i in range(len(unique))]))
+
+    x = bisecting_kmeans(kropt, n_clusters=16, max_iter=100, verbose=False)
+    print(x[:20])
+    unique, frequency = np.unique(x, return_counts=True)
+    print('\n'.join(['{}: {}'.format(unique[i], frequency[i]) for i in range(len(unique))]))
     pass

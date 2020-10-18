@@ -32,5 +32,5 @@ class Factory():
             algorithm = DBSCANAlgorithm(config, output_path, verbose)
         else:
             raise Exception('The algorithm with name ' + name + ' does not exist')
-        if issubclass(algorithm, Algorithm):
+        if issubclass(type(algorithm), Algorithm):
             return algorithm

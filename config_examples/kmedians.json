@@ -5,10 +5,10 @@
 		"prepare": [{"name": "shuffle"}]
 	},
 	"algorithm": {
-		"name": "kmeans",
+		"name": "kmedians",
 		"n_clusters": 16,
-		"max_iter": 100
+		"max_iter": 50
 	},
 	"charts": [{"name": "class_frequencies"}],
-	"manual_seed": 0
+	"manual_seed": 1
 }

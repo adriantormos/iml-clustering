@@ -6,10 +6,8 @@
 	},
 	"algorithm": {
 		"name": "bisecting_kmeans",
-		"kmeans": {
-			"n_clusters": 16,
-			"max_iter": 50
-		}
+		"n_clusters": 16,
+		"max_iter": 50
 	},
 	"charts": [{"name": "class_frequencies"}],
 	"manual_seed": 1

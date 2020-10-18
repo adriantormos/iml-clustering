@@ -8,12 +8,12 @@ class BisectingKmeansAlgorithm(Algorithm):
     # Main methods
 
     def __init__(self, config, output_path, verbose):
-        self.n_clusters = config['kmeans']['n_clusters']
-        self.max_iter = config['kmeans']['max_iter']
+        self.n_clusters = config['n_clusters']
+        self.max_iter = config['max_iter']
         self.verbose = verbose
-        self.kmeans = KmeansAlgorithm(config['kmeans'], output_path, verbose)
+        self.kmeans = KmeansAlgorithm({'n_clusters': 2, 'max_iter': self.max_iter}, output_path, verbose)
 
-    def train(self, values: np.ndarray, labels: None):
+    def train(self, values: np.ndarray, labels=None):
         if self.verbose:
             print('Starting bisecting k-means.', 'Maximum {} iterations'.format(self.max_iter))
             start_time = time.time()
@@ -24,7 +24,7 @@ class BisectingKmeansAlgorithm(Algorithm):
             return np.zeros(len(values))
 
         # Initial separation
-        labels: np.ndarray = self.kmeans(values, None)
+        labels: np.ndarray = self.kmeans.train(values)
         found_clusters = 2
 
         if self.verbose:
@@ -39,7 +39,7 @@ class BisectingKmeansAlgorithm(Algorithm):
             rows_from_worst_cluster = values[labels == worst_cluster]
 
             # Perform k-means with worst cluster
-            labels_to_merge = self.kmeans.train(rows_from_worst_cluster, n_clusters=2, max_iter=self.max_iter, verbose=self.verbose)
+            labels_to_merge = self.kmeans.train(rows_from_worst_cluster)
             labels = self.merge_labels(labels, labels_to_merge, worst_cluster, [worst_cluster, found_clusters])
 
             found_clusters += 1

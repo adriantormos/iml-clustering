@@ -14,7 +14,7 @@ class KmeansAlgorithm(Algorithm):
         self.init_centroids = config['init_centroids'] if 'init_centroids' in config else None
         self.verbose = verbose
 
-    def train(self, values: np.ndarray, labels: None) -> np.ndarray: # Unsupervised learning
+    def train(self, values: np.ndarray, labels=None) -> np.ndarray: # Unsupervised learning
         has_converged = False
 
         if self.verbose:

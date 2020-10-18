@@ -15,18 +15,22 @@ class Factory():
     def select_dataset(config, verbose) -> Dataset:
         name = config['name']
         if name == 'kropt':
-            return KroptDataset(config, verbose)
+            dataset = KroptDataset(config, verbose)
         else:
             raise Exception('The dataset with name ' + name + ' does not exist')
+        if issubclass(dataset, Dataset):
+            return dataset
 
     @staticmethod
     def select_algorithm(config, output_path, verbose) -> Algorithm:
         name = config['name']
         if name == 'kmeans':
-            return KmeansAlgorithm(config, output_path, verbose)
+            algorithm = KmeansAlgorithm(config, output_path, verbose)
         elif name == 'bisecting_kmeans':
-            return BisectingKmeansAlgorithm(config, output_path, verbose)
+            algorithm = BisectingKmeansAlgorithm(config, output_path, verbose)
         elif name == 'dbscan':
-            return DBSCANAlgorithm(config, output_path, verbose)
+            algorithm = DBSCANAlgorithm(config, output_path, verbose)
         else:
             raise Exception('The algorithm with name ' + name + ' does not exist')
+        if issubclass(algorithm, Algorithm):
+            return algorithm

@@ -4,7 +4,7 @@ from scipy.spatial import distance
 import time
 
 
-class KmeansAlgorithm(Algorithm):
+class KMeansAlgorithm(Algorithm):
 
     # Main methods
 

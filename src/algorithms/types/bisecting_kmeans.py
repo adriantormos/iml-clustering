@@ -1,9 +1,9 @@
 from src.algorithms.algorithm import Algorithm
-from src.algorithms.types.kmeans import KmeansAlgorithm
+from src.algorithms.types.kmeans import KMeansAlgorithm
 import numpy as np
 import time
 
-class BisectingKmeansAlgorithm(Algorithm):
+class BisectingKMeansAlgorithm(Algorithm):
 
     # Main methods
 
@@ -11,7 +11,7 @@ class BisectingKmeansAlgorithm(Algorithm):
         self.n_clusters = config['n_clusters']
         self.max_iter = config['max_iter']
         self.verbose = verbose
-        self.kmeans = KmeansAlgorithm({'n_clusters': 2, 'max_iter': self.max_iter}, output_path, verbose)
+        self.kmeans = KMeansAlgorithm({'n_clusters': 2, 'max_iter': self.max_iter}, output_path, verbose)
 
     def train(self, values: np.ndarray, labels=None):
         if self.verbose:

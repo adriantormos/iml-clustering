@@ -1,8 +1,8 @@
 from src.data.dataset import Dataset
 from src.data.types.Kropt import KroptDataset
 from src.algorithms.algorithm import Algorithm
-from src.algorithms.types.kmeans import KmeansAlgorithm
-from src.algorithms.types.bisecting_kmeans import BisectingKmeansAlgorithm
+from src.algorithms.types.kmeans import KMeansAlgorithm
+from src.algorithms.types.bisecting_kmeans import BisectingKMeansAlgorithm
 from src.algorithms.types.dbscan import DBSCANAlgorithm
 
 
@@ -25,9 +25,9 @@ class Factory():
     def select_algorithm(config, output_path, verbose) -> Algorithm:
         name = config['name']
         if name == 'kmeans':
-            algorithm = KmeansAlgorithm(config, output_path, verbose)
+            algorithm = KMeansAlgorithm(config, output_path, verbose)
         elif name == 'bisecting_kmeans':
-            algorithm = BisectingKmeansAlgorithm(config, output_path, verbose)
+            algorithm = BisectingKMeansAlgorithm(config, output_path, verbose)
         elif name == 'dbscan':
             algorithm = DBSCANAlgorithm(config, output_path, verbose)
         else:

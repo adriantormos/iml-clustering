@@ -13,12 +13,16 @@ class KMeansAlgorithm(Algorithm):
         self.max_iter = config['max_iter']
         self.init_centroids = config['init_centroids'] if 'init_centroids' in config else None
         self.verbose = verbose
+        self.maximization_function = 'average'
+        if 'maximization_function' in config:
+            self.maximization_function = config['maximization_function']
 
     def train(self, values: np.ndarray, labels=None) -> np.ndarray: # Unsupervised learning
         has_converged = False
 
         if self.verbose:
-            print('Starting k-means.', 'Maximum {} iterations'.format(self.max_iter))
+            print('Starting k-means.' if self.maximization_function == 'average' else 'Starting k-medians.',
+                  'Maximum {} iterations'.format(self.max_iter))
             start_time = time.time()
 
         # Initialize centroids
@@ -33,9 +37,14 @@ class KMeansAlgorithm(Algorithm):
             # Compute nearest centroid of each sample
             labels: np.ndarray = np.array([self.get_nearest_centroid(sample, centroids) for sample in values])
 
+            new_centroids = []
             # Recompute centroids
-            new_centroids: np.ndarray = np.array([np.average(values[labels == cluster_id], axis=0)
-                                                  for cluster_id in range(self.n_clusters)])
+            if self.maximization_function == 'average':
+                new_centroids: np.ndarray = np.array([np.average(values[labels == cluster_id], axis=0)
+                                                      for cluster_id in range(self.n_clusters)])
+            elif self.maximization_function == 'median':
+                new_centroids: np.ndarray = np.array([np.median(values[labels == cluster_id], axis=0)
+                                                      for cluster_id in range(self.n_clusters)])
 
             if self.verbose:
                 it_counter = i
@@ -49,7 +58,8 @@ class KMeansAlgorithm(Algorithm):
             centroids = new_centroids
 
         if self.verbose:
-            print('Finished k-means.', '{} iterations performed in'.format(it_counter + 1),
+            print('Finished k-means.' if self.maximization_function == 'average' else 'Finished k-medians.',
+                  '{} iterations performed in'.format(it_counter + 1),
                   '{0:.3f} seconds.'.format(time.time() - start_time),
                   'Algorithm converged.' if has_converged else 'Algorithm did not converge.')
 

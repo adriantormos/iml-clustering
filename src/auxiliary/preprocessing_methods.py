@@ -8,3 +8,11 @@ def shuffle_in_unison(a, b):
     np.random.shuffle(a)
     np.random.set_state(rng_state)
     np.random.shuffle(b)
+
+def min_max_normalize(array):
+   max_value = np.max(array)
+   min_value = np.min(array)
+   output = np.zeros(array.shape)
+   if max_value != min_value:
+     output = (array - min_value)/(max_value - min_value)
+   return output

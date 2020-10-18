@@ -1,5 +1,6 @@
 from src.data.dataset import Dataset
-from src.data.types.Kropt import KroptDataset
+from src.data.types.kropt import KroptDataset
+from src.data.types.hypothyroid import HypothyroidDataset
 from src.algorithms.algorithm import Algorithm
 from src.algorithms.types.kmeans import KmeansAlgorithm
 from src.algorithms.types.bisecting_kmeans import BisectingKmeansAlgorithm
@@ -16,6 +17,8 @@ class Factory():
         name = config['name']
         if name == 'kropt':
             dataset = KroptDataset(config, verbose)
+        elif name == 'hypothyroid':
+            dataset = HypothyroidDataset(config, verbose)
         else:
             raise Exception('The dataset with name ' + name + ' does not exist')
         if issubclass(dataset, Dataset):

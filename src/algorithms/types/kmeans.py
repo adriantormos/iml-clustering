@@ -3,6 +3,7 @@ import numpy as np
 from scipy.spatial import distance
 import time
 
+
 class KmeansAlgorithm(Algorithm):
 
     # Main methods
@@ -22,7 +23,8 @@ class KmeansAlgorithm(Algorithm):
 
         # Initialize centroids
         if self.init_centroids is None:
-            centroids: np.ndarray = np.random.random_sample((self.n_clusters, values.shape[1]))
+            centroids: np.ndarray = np.array([values[i] for i in np.random.choice(len(values),
+                                                                                  size=self.n_clusters, replace=False)])
         else:
             centroids: np.ndarray = np.array(self.init_centroids)
 
@@ -32,7 +34,8 @@ class KmeansAlgorithm(Algorithm):
             labels: np.ndarray = np.array([self.get_nearest_centroid(sample, centroids) for sample in values])
 
             # Recompute centroids
-            new_centroids: np.ndarray = np.array([np.average(values[labels == cluster_id], axis=0) for cluster_id in range(self.n_clusters)])
+            new_centroids: np.ndarray = np.array([np.average(values[labels == cluster_id], axis=0)
+                                                  for cluster_id in range(self.n_clusters)])
 
             if self.verbose:
                 it_counter = i
@@ -61,5 +64,4 @@ class KmeansAlgorithm(Algorithm):
     # Auxiliary methods
 
     def get_nearest_centroid(self, value, centroids: np.ndarray):
-        x_array = np.repeat([value], [len(centroids)], axis=0)
-        return np.argmin(distance.cdist(x_array, centroids, 'euclidean'))
+        return np.argmin(distance.cdist(np.array([value]), centroids, 'euclidean'))

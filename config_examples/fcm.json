@@ -1,0 +1,20 @@
+{
+	"data": {
+		"name": "kropt",
+		"balance": 0,
+		"prepare": [{"name": "shuffle"}]
+	},
+	"algorithm": {
+		"name": "fcm",
+		"n_clusters": 16,
+		"max_iter": 10,
+		"finish_threshold": 0,
+		"fuzziness": 5,
+		"distance_metric": "euclidean",
+		"initial_matrix_computation": "random",
+		"defuzzification_method": "max_value",
+		"objective_computation": "euclidean"
+	},
+	"charts": [{"name": "class_frequencies"}],
+	"manual_seed": 0
+}

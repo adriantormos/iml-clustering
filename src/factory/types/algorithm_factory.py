@@ -3,6 +3,7 @@ from src.algorithms.types.kmeans import KMeansAlgorithm
 from src.algorithms.types.kmedians import KMediansAlgorithm
 from src.algorithms.types.bisecting_kmeans import BisectingKMeansAlgorithm
 from src.algorithms.types.dbscan import DBSCANAlgorithm
+from src.algorithms.types.fcm import FCMAlgorithm
 
 
 class AlgorithmFactory:
@@ -21,6 +22,8 @@ class AlgorithmFactory:
             algorithm = KMediansAlgorithm(config, output_path, verbose)
         elif name == 'dbscan':
             algorithm = DBSCANAlgorithm(config, output_path, verbose)
+        elif name == 'fcm':
+            algorithm = FCMAlgorithm(config, output_path, verbose)
         else:
             raise Exception('The algorithm with name ' + name + ' does not exist')
         if issubclass(type(algorithm), Algorithm):

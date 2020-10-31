@@ -1,7 +1,3 @@
-from src.data.dataset import Dataset
-from src.data.types.kropt import KroptDataset
-from src.data.types.hypothyroid import HypothyroidDataset
-from src.data.types.breast import BreastDataset
 from src.algorithms.algorithm import Algorithm
 from src.algorithms.types.kmeans import KMeansAlgorithm
 from src.algorithms.types.kmedians import KMediansAlgorithm
@@ -9,24 +5,10 @@ from src.algorithms.types.bisecting_kmeans import BisectingKMeansAlgorithm
 from src.algorithms.types.dbscan import DBSCANAlgorithm
 
 
-class Factory():
+class AlgorithmFactory:
 
     def __init__(self):
         raise Exception('This class can not be instantiated')
-
-    @staticmethod
-    def select_dataset(config, verbose) -> Dataset:
-        name = config['name']
-        if name == 'kropt':
-            dataset = KroptDataset(config, verbose)
-        elif name == 'hypothyroid':
-            dataset = HypothyroidDataset(config, verbose)
-        elif name == 'breast':
-            dataset = BreastDataset(config, verbose)
-        else:
-            raise Exception('The dataset with name ' + name + ' does not exist')
-        if issubclass(dataset, Dataset):
-            return dataset
 
     @staticmethod
     def select_algorithm(config, output_path, verbose) -> Algorithm:

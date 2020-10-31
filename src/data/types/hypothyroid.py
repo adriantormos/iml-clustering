@@ -1,9 +1,11 @@
 from src.data.dataset import Dataset
 from src.auxiliary.file_methods import load_arff
-from src.auxiliary.preprocessing_methods import min_max_normalize
+from src.auxiliary.preprocessing_methods import min_max_normalize, one_hot_encoding
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 
 class HypothyroidDataset(Dataset):
 
@@ -17,6 +19,7 @@ class HypothyroidDataset(Dataset):
         self.only_numerical = config['only_numerical']
         self.class_feature = 'Class'
         self.numerical_features = ['age', 'TSH', 'T3', 'TT4', 'T4U', 'FTI', 'TBG']
+        self.null_values = [b'?']
         self.nominal_features = [name for name in self.data.columns if name not in self.numerical_features + [self.class_feature]]
         self.verbose = verbose
 
@@ -34,18 +37,22 @@ class HypothyroidDataset(Dataset):
         if self.verbose:
             print('Started data preprocessing')
 
+        # Replace non orthodox nan values like ? for nan values
+        for null_value in self.null_values:
+            data.replace(null_value, None, inplace=True)
+
         # Delete features with more than half of samples with NaN values
         if self.verbose:
-            nan_count = self.data.isnull().sum().sum()
+            nan_count = data.isnull().sum().sum()
             print('    ', 'Total number of NaNs: ', nan_count, '; relative: ',
             (nan_count * 100) / (len(data.index) * len(data.columns)), '%')
 
         columns_to_drop = []
-        for feature_index in self.data.columns:
-            nan_count = self.data[feature_index].isnull().sum()
-            if nan_count > (len(self.data.index)/2):
+        for feature_index in data.columns:
+            nan_count = data[feature_index].isnull().sum()
+            if nan_count > (len(data.index)/2):
                 columns_to_drop.append(feature_index)
-        self.data.drop(columns=columns_to_drop, inplace=True)
+        data.drop(columns=columns_to_drop, inplace=True)
         self.numerical_features = [name for name in self.numerical_features if name not in columns_to_drop]
         self.nominal_features = [name for name in self.nominal_features if name not in columns_to_drop]
         if self.verbose:
@@ -53,32 +60,42 @@ class HypothyroidDataset(Dataset):
 
         # Numerical features -> replace the NaN values by the mean and normalize
         for feature_index in self.numerical_features:
-            feature = self.data[feature_index]
-            nan_indexes = self.data.index[feature.isnull()].tolist()
+            feature = data[feature_index]
+
+            # replace the NaN values by the mean
+            nan_indexes = data.index[feature.isnull()].tolist()
             feature = feature.to_numpy()
             feature_without_nans = np.delete(feature, nan_indexes)
             mean = np.mean(feature_without_nans)
             feature[nan_indexes] = mean
+
+            # do normalization
             normalized_feature = min_max_normalize(feature)
-            self.data[feature_index] = normalized_feature
+            data[feature_index] = normalized_feature
 
         # Nominal features -> replace the NaN values by the median
         if not self.only_numerical:
-            for feature_index in self.numerical_features:
-                feature = self.data[feature_index]
-                nan_indexes = self.data.index[feature.isnull()].tolist()
+            for feature_index in self.nominal_features:
+                feature = data[feature_index]
+
+                # replace the NaN values by the median
+                nan_indexes = data.index[feature.isnull()].tolist()
                 feature = feature.to_numpy()
                 feature_without_nans = np.delete(feature, nan_indexes)
-                median = np.median(feature_without_nans)
+                unique, counts = np.unique(feature_without_nans, return_counts=True)
+                median = unique[np.argmax(np.asarray(counts))]
                 feature[nan_indexes] = median
-                self.data[feature_index] = feature
+                data[feature_index] = feature
+
+            # do hot encoding
+            data = one_hot_encoding(data, self.nominal_features)
 
         if self.verbose:
             print('Finished data preprocessing')
 
         if self.only_numerical:
-            values = self.data[self.numerical_features].to_numpy()
+            values = data[self.numerical_features].to_numpy()
         else:
-            values = self.data.loc[:, self.data.columns != self.class_feature].to_numpy()
+            values = data.loc[:, data.columns != self.class_feature].to_numpy()
         labels = data[self.class_feature].to_numpy()
         return values, labels

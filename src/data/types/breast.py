@@ -1,9 +1,7 @@
 from src.data.dataset import Dataset
 from src.auxiliary.file_methods import load_arff
-from src.auxiliary.preprocessing_methods import min_max_normalize
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 class BreastDataset(Dataset):
 

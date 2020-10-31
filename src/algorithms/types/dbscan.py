@@ -4,6 +4,7 @@ from scipy.spatial import distance
 from sklearn.cluster import DBSCAN
 import time
 
+
 class DBSCANAlgorithm(Algorithm):
 
     # Main methods

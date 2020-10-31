@@ -3,6 +3,7 @@ from src.algorithms.types.kmeans import KMeansAlgorithm
 import numpy as np
 import time
 
+
 class BisectingKMeansAlgorithm(Algorithm):
 
     # Main methods

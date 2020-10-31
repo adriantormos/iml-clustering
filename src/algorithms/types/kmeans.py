@@ -11,7 +11,7 @@ class KMeansAlgorithm(Algorithm):
     def __init__(self, config, output_path, verbose):
         self.n_clusters = config['n_clusters']
         self.max_iter = config['max_iter']
-        self.init_centroids = config['init_centroids'] if 'init_centroids' in config else None
+        self.init_centroids = config['init_centroids'] if 'init_centroids' in config else 'random'
         self.verbose = verbose
         self.maximization_function = 'average'
         if 'maximization_function' in config:
@@ -26,9 +26,11 @@ class KMeansAlgorithm(Algorithm):
             start_time = time.time()
 
         # Initialize centroids
-        if self.init_centroids is None:
+        if self.init_centroids is 'random':
             centroids: np.ndarray = np.array([values[i] for i in np.random.choice(len(values),
                                                                                   size=self.n_clusters, replace=False)])
+        elif self.init_centroids is 'kmeans++':
+            pass
         else:
             centroids: np.ndarray = np.array(self.init_centroids)
 

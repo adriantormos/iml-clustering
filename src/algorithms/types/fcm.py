@@ -1,7 +1,6 @@
 from src.algorithms.algorithm import Algorithm
 from src.auxiliary.file_methods import print_pretty_json
 import numpy as np
-from scipy.spatial import distance
 import time
 
 
@@ -36,7 +35,8 @@ class FCMAlgorithm(Algorithm):
             self.compute_objective = self.euclidean_objective
         else:
             raise Exception('Objective computation not implemented')
-
+        if self.fuzziness <= 1:
+            raise Exception('Algorithm only implemented for fuzziness > 1')
 
     def train(self, values: np.ndarray, labels=None) -> np.ndarray: # Unsupervised learning
         if self.verbose:
@@ -46,33 +46,33 @@ class FCMAlgorithm(Algorithm):
 
         belonging_matrix = self.compute_initial_matrix(values.shape[0])
 
-        iter = 0
+        index = 0
         goal = None
         has_converged = False
-        while not has_converged and iter < self.max_iter:
+        while not has_converged and index < self.max_iter:
             centroids = self.compute_centroids(values, belonging_matrix)
             self.update_matrix(centroids, values, belonging_matrix)
-
             score = self.compute_objective(values, centroids, belonging_matrix)
-            if goal and abs(goal - score):
+            if goal and (abs(goal - score) < self.finish_threshold):
+                print(goal, score)
                 has_converged = True
             goal = score
 
             if self.verbose:
-                if iter % 50 == 0:
-                    print('Iteration {} of {}'.format(iter + 1, self.max_iter))
-            iter += 1
+                if index % 50 == 0:
+                    print('Iteration {} of {}'.format(index + 1, self.max_iter))
+            index += 1
 
         if self.verbose:
             print('Finished FCM',
-                  '{} iterations performed in'.format(iter),
+                  '{} iterations performed in'.format(index),
                   '{0:.3f} seconds.'.format(time.time() - start_time),
                   'Algorithm converged.' if has_converged else 'Algorithm did not converge.')
 
         return self.compute_defuzzification(belonging_matrix)
 
     def evaluate(self, values: np.ndarray) -> np.ndarray:
-        raise NotImplementedError('Method not implemented') # Return for each value their nearest centroid label
+        raise NotImplementedError('Method not implemented')
 
     def save(self):
         raise NotImplementedError('Method not implemented')
@@ -100,16 +100,21 @@ class FCMAlgorithm(Algorithm):
 
     def update_matrix(self, centroids, values, belonging_matrix):
         distances_matrix = np.zeros((values.shape[0], self.n_clusters))
+
+        aux = time.time()
         for index_matrix in range(values.shape[0]):
             for index_centroid in range(self.n_clusters):
                 distances_matrix[index_matrix, index_centroid] = self.compute_distance_between_points(values[index_matrix], centroids[index_centroid])
+        print('distance', time.time() - aux)
 
+        aux = time.time()
         for index_matrix in range(values.shape[0]):
             for index_centroid in range(self.n_clusters):
                 sum = 0
                 for index_centroid_2 in range(self.n_clusters):
-                    sum += distances_matrix[index_matrix, index_centroid] / distances_matrix[index_matrix, index_centroid_2]
-                belonging_matrix[index_matrix,index_centroid] = (sum**(2/(self.fuzziness - 1)))**(-1)
+                    sum += (distances_matrix[index_matrix, index_centroid] / distances_matrix[index_matrix, index_centroid_2])**(2/(self.fuzziness - 1))
+                belonging_matrix[index_matrix,index_centroid] = sum**(-1)
+        print('3rd loop', time.time() - aux)
 
     def euclidean_objective(self, values, centroids, belonging_matrix):
         score = 0

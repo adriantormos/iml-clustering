@@ -7,9 +7,9 @@
 	"algorithm": {
 		"name": "fcm",
 		"n_clusters": 16,
-		"max_iter": 10,
+		"max_iter": 1,
 		"finish_threshold": 0,
-		"fuzziness": 5,
+		"fuzziness": 2,
 		"distance_metric": "euclidean",
 		"initial_matrix_computation": "random",
 		"defuzzification_method": "max_value",

@@ -2,6 +2,7 @@ from sklearn.metrics import davies_bouldin_score
 import time
 from src.validation.validation_method import ValidationMethod
 from src.factory.types.algorithm_factory import AlgorithmFactory
+from src.algorithms.algorithm import Algorithm
 
 
 class DaviesBouldinScore(ValidationMethod):
@@ -9,10 +10,9 @@ class DaviesBouldinScore(ValidationMethod):
     def __init__(self, config, output_path, verbose):
         self.clusters = config['clusters']
         self.n_initializations = config['n_initializations']
-        self.algorithm = config['algorithm']
         self.verbose = verbose
 
-    def evaluate(self, values):
+    def evaluate(self, values, algorithm):
         scores_per_k = []
         labels_per_k = []
 
@@ -27,12 +27,7 @@ class DaviesBouldinScore(ValidationMethod):
             if self.verbose:
                 print('Validating {} clusters'.format(k))
 
-            algorithm_config = {
-                'name': self.algorithm['name'],
-                'n_clusters': k,
-                'max_iter': self.algorithm['max_iter']
-            }
-            algorithm = AlgorithmFactory.select_algorithm(algorithm_config, '', self.verbose)
+            algorithm.n_clusters = k
 
             # Initial placeholder values for a certain k
             score_this_k = float('inf')

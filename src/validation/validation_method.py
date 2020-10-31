@@ -11,9 +11,9 @@ class ValidationMethod(metaclass=abc.ABCMeta):
                 NotImplemented)
 
     @abc.abstractmethod
-    def __init__(self, config, output_path, verbose, algorithm):
+    def __init__(self, config, output_path, verbose):
         raise NotImplementedError('Method not implemented in interface class')
 
     @abc.abstractmethod
-    def evaluate(self, values):
+    def evaluate(self, values, algorithm):
         raise NotImplementedError('Method not implemented in interface class')

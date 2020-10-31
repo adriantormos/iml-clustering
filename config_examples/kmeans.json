@@ -4,15 +4,15 @@
 		"balance": 0,
 		"prepare": [{"name": "shuffle"}]
 	},
+	"algorithm": {
+		"name": "kmeans",
+		"n_clusters": 16,
+		"max_iter": 100
+	},
 	"validation": {
 		"name": "daviesbouldin",
 		"clusters": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-		"n_initializations": 5,
-		"algorithm": {
-			"name": "kmeans",
-			"n_clusters": 16,
-			"max_iter": 100
-		}
+		"n_initializations": 2
 	},
 	"charts": [{"name": "class_frequencies"}],
 	"manual_seed": 0

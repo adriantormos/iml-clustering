@@ -1,10 +1,12 @@
 import argparse
 import sys
 from src.auxiliary.file_methods import load_json, save_json
-from src.factory import Factory
+from src.factory.types.dataset_factory import DatasetFactory
+from src.factory.types.validation_factory import ValidationFactory
 from src.visualize import show_charts
 import random
 import numpy as np
+
 
 def parse_arguments():
     def parse_bool(s: str):
@@ -27,12 +29,14 @@ def parse_arguments():
 
     return args
 
+
 def main(config_path: str, output_path: str, visualize: bool, verbose: bool):
 
     # Load configuration
     config = load_json(config_path)
     data_config = config['data']
-    algorithm_config = config['algorithm']
+    validation_config = config['validation']
+    # algorithm_config = config['algorithm']
     charts_config = config['charts']
 
     # Set up
@@ -40,24 +44,28 @@ def main(config_path: str, output_path: str, visualize: bool, verbose: bool):
     np.random.seed(config['manual_seed'])
 
     # Load and prepare data
-    dataset = Factory.select_dataset(data_config, verbose)
+    dataset = DatasetFactory.select_dataset(data_config, verbose)
     values, labels = dataset.get_preprocessed_data()
     values, labels = dataset.prepare(values, labels)
 
+    method = ValidationFactory.select_validation(validation_config, output_path, verbose)
+    output_scores, output_labels = method.evaluate(values)
+
+    print(output_scores)
+
     # Train algorithm
-    algorithm = Factory.select_algorithm(algorithm_config, output_path, verbose)
-    output_labels = algorithm.train(values, labels)
+    # algorithm = Factory.select_algorithm(algorithm_config, output_path, verbose)
+    # output_labels = algorithm.train(values, labels)
 
     # Test algorithm -> Not implemented yet
 
     # Visualize results
-    show_charts(charts_config, output_path, output_labels, visualize, verbose)
-
-    # Save config json and algorithm model
-    if output_path:
-        save_json(output_path + 'config', config)
-        #algorithm.save() -> Not implemented yet
-
+    # show_charts(charts_config, output_path, output_labels, visualize, verbose)
+    #
+    # # Save config json and algorithm model
+    # if output_path:
+    #     save_json(output_path + 'config', config)
+    #     #algorithm.save() -> Not implemented yet
 
 
 if __name__ == '__main__':

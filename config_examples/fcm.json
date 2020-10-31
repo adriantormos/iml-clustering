@@ -5,15 +5,21 @@
 		"prepare": [{"name": "shuffle"}]
 	},
 	"algorithm": {
-		"name": "fcm",
-		"n_clusters": 16,
-		"max_iter": 1,
-		"finish_threshold": 0,
-		"fuzziness": 2,
-		"distance_metric": "euclidean",
-		"initial_matrix_computation": "random",
-		"defuzzification_method": "max_value",
-		"objective_computation": "euclidean"
+			"name": "fcm",
+			"n_clusters": 16,
+			"max_iter": 1,
+			"finish_threshold": 0,
+			"fuzziness": 2,
+			"distance_metric": "euclidean",
+			"initial_matrix_computation": "random",
+			"defuzzification_method": "max_value",
+			"objective_computation": "euclidean"
+	},
+	"optimizer": {
+		"name": "unsupervised",
+		"parameters": [{"name": "n_clusters", "values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}],
+		"n_runs": 5,
+		"metrics": ["davies_bouldin_score"]
 	},
 	"charts": [{"name": "class_frequencies"}],
 	"manual_seed": 0

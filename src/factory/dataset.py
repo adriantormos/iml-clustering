@@ -20,5 +20,7 @@ class DatasetFactory:
             dataset = BreastDataset(config, verbose)
         else:
             raise Exception('The dataset with name ' + name + ' does not exist')
-        if issubclass(dataset, Dataset):
+        if issubclass(type(dataset), Dataset):
             return dataset
+        else:
+            raise Exception('The dataset does not follow the interface definition')

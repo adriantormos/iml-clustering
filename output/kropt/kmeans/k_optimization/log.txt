@@ -1,0 +1,5 @@
+## Something
+
+### Example of how to run kmeans
+
+python3 main.py --config_path path/config_examples/kmeans.json --verbose True

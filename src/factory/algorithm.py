@@ -28,3 +28,5 @@ class AlgorithmFactory:
             raise Exception('The algorithm with name ' + name + ' does not exist')
         if issubclass(type(algorithm), Algorithm):
             return algorithm
+        else:
+            raise Exception('The algorithm does not follow the interface definition')

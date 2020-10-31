@@ -1,5 +1,8 @@
 import numpy as np
 
+# correlation among variables
+# https://towardsdatascience.com/the-art-of-effective-visualization-of-multi-dimensional-data-6c7202990c57
+# https://www.kaggle.com/minc33/visualizing-high-dimensional-clusters
 
 def show_charts(config, output_path, labels, visualize, verbose):
     for chart in config:

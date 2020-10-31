@@ -1,9 +1,9 @@
 import argparse
 import sys
 from src.auxiliary.file_methods import load_json, save_json
-from src.factory.types.dataset_factory import DatasetFactory
-from src.factory.types.algorithm_factory import AlgorithmFactory
-from src.factory.types.validation_factory import ValidationFactory
+from src.factory.dataset import DatasetFactory
+from src.factory.algorithm import AlgorithmFactory
+from src.factory.optimizer import OptimizerFactory
 from src.visualize import show_charts
 import random
 import numpy as np
@@ -36,7 +36,7 @@ def main(config_path: str, output_path: str, visualize: bool, verbose: bool):
     # Load configuration
     config = load_json(config_path)
     data_config = config['data']
-    validation_config = config['validation']
+    optimizer_config = config['optimizer']
     algorithm_config = config['algorithm']
     charts_config = config['charts']
 
@@ -49,25 +49,20 @@ def main(config_path: str, output_path: str, visualize: bool, verbose: bool):
     values, labels = dataset.get_preprocessed_data()
     values, labels = dataset.prepare(values, labels)
 
-    algorithm = AlgorithmFactory.select_algorithm(algorithm_config, output_path, verbose)
-
-    method = ValidationFactory.select_validation(validation_config, output_path, verbose)
-    output_scores, output_labels = method.evaluate(values, algorithm)
-
-    print(output_scores)
-
-    # Train algorithm
-    # algorithm = Factory.select_algorithm(algorithm_config, output_path, verbose)
-    # output_labels = algorithm.train(values, labels)
-
-    # Test algorithm -> Not implemented yet
+    # Run algorithm
+    if 'optimizer' in config:
+        optimizer = OptimizerFactory.select_optimizer(optimizer_config, algorithm_config, output_path, verbose)
+        output_labels = optimizer.run(values, labels)
+    else:
+        algorithm = AlgorithmFactory.select_algorithm(algorithm_config, output_path, verbose)
+        output_labels = algorithm.train(values, labels)
 
     # Visualize results
     show_charts(charts_config, output_path, output_labels, visualize, verbose)
 
     # Save config json and algorithm model
-    if output_path:
-        save_json(output_path + 'config', config)
+    if output_path is not None:
+        save_json(output_path + '/config', config)
         #algorithm.save() -> Not implemented yet
 
 

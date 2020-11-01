@@ -1,11 +1,11 @@
-from src.algorithms.algorithm import Algorithm
+from src.algorithms.unsupervised_algorithm import UnsupervisedAlgorithm
 import numpy as np
 from scipy.spatial import distance
 from sklearn.cluster import DBSCAN
 import time
 
 
-class DBSCANAlgorithm(Algorithm):
+class DBSCANAlgorithm(UnsupervisedAlgorithm):
 
     # Main methods
 
@@ -15,12 +15,15 @@ class DBSCANAlgorithm(Algorithm):
         self.algorithm = config['algorithm']
         self.verbose = verbose
 
-    def train(self, values: np.ndarray, labels: np.ndarray) -> np.ndarray: # Revise this code
+    def run(self, values: np.ndarray) -> np.ndarray: # Revise this code
         #data = np.concatenate((values, labels), axis=0)
         return DBSCAN(eps=self.eps, metric=self.metric, algorithm=self.algorithm).fit_predict(values)
 
     def evaluate(self, values: np.ndarray) -> np.ndarray: # Revise this code
         return DBSCAN(eps=self.eps, metric=self.metric, algorithm=self.algorithm).fit_predict(values)
+
+    def merge_labels(self, labels, output_labels):
+        return output_labels
 
     def save(self):
         raise NotImplementedError('Method not implemented in interface class')

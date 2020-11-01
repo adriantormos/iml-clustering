@@ -6,6 +6,7 @@ import sklearn.metrics as metrics
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from pandas.plotting import parallel_coordinates
 
 # correlation among variables
 # parallel coordinates
@@ -33,6 +34,19 @@ def class_frequencies(config, output_path, values, labels, output_labels, visual
         number_samples2 = counts2[np.where(unique2 == _class)[0]][0]
         rows.append([_class, number_samples1, number_samples2])
         x.add_row([_class, number_samples1, number_samples2])
+    if output_path is not None:
+        save_csv(output_path + '/samples_distribution', rows)
+    print(x)
+
+def class_frequencies_separate(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
+    unique, counts = np.unique(output_labels, return_counts=True)
+    rows = [['class', 'predicted_samples_distribution']]
+    x = PrettyTable()
+    x.field_names = ['class', 'predicted_samples_distribution']
+    for index, _class in enumerate(unique):
+        number_samples = counts[index]
+        rows.append([_class, number_samples])
+        x.add_row([_class, number_samples])
     if output_path is not None:
         save_csv(output_path + '/samples_distribution', rows)
     print(x)
@@ -86,11 +100,32 @@ def show_correlation_among_variables(config, output_path, values, labels, output
 
 
 def show_parallel_coordinates(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
-    pass
+    f, ax = plt.subplots(figsize=(config['figsize'][0], config['figsize'][1]))
+    plt.title(config['title'] + ' original labels')
+    pc = parallel_coordinates(dataframe, dataframe.columns[-1])
+    if output_path is not None:
+        plt.savefig(output_path + '/parallel_coordinates_labels', bbox_inches='tight')
+    plt.show()
+    aux = dataframe.copy()
+    aux[dataframe.columns[-1]] = output_labels
+    f, ax = plt.subplots(figsize=(config['figsize'][0], config['figsize'][1]))
+    plt.title(config['title'] + ' predicted labels')
+    pc = parallel_coordinates(aux, dataframe.columns[-1])
+    if output_path is not None:
+        plt.savefig(output_path + '/parallel_coordinates_predicted_labels', bbox_inches='tight')
+    plt.show()
 
 
 def show_pair_wise_scatter_plot(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
-    pass
+    cols = ['density', 'residual sugar', 'total sulfur dioxide', 'fixed acidity', 'wine_type']
+    print(dataframe.columns[-1])
+    pp = sns.pairplot(dataframe['cols'], hue=dataframe.columns[-1], height=1.8, aspect=1.8,
+                      palette={"red": "#FF9999", "white": "#FFE888"},
+                      plot_kws=dict(edgecolor="black", linewidth=0.5))
+    fig = pp.fig
+    fig.subplots_adjust(top=0.93, wspace=0.3)
+    t = fig.suptitle('Wine Attributes Pairwise Plots', fontsize=14)
+    plt.show()
 
 def show_clusters_pca_2d(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
     pass

@@ -51,20 +51,16 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
         goal = None
         has_converged = False
         while not has_converged and index < self.max_iter:
-            time1 = time.time()
             centroids = self.compute_centroids(values, membership_matrix)
-            time2 = time.time()
-            self.update_matrix(centroids, values, membership_matrix)
-            time3 = time.time()
+            membership_matrix = self.update_matrix(centroids, values)
             score = self.compute_objective(values, centroids, membership_matrix)
-            time4 = time.time()
-            if goal and (abs(goal - score) < self.finish_threshold):
-                print(goal, score)
+            if goal and (abs(goal - score) <= self.finish_threshold):
+                if self.verbose:
+                    print(goal, score)
                 has_converged = True
             goal = score
 
             if self.verbose:
-                print('Centroids:', time2-time1, 'Matrix:', time3-time2, 'Objective:', time4-time3)
                 if index % 50 == 0:
                     print('Iteration {} of {}'.format(index + 1, self.max_iter))
             index += 1
@@ -95,7 +91,7 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
 
         # Every sum((U_ik)^m * x_k)
         weighted_sums = np.array([
-            np.sum(np.array([exponent_membership_matrix[k, i] * values[k] for k in range(len(values))]))
+            np.sum(np.array([exponent_membership_matrix[k, i] * values[k] for k in range(len(values))]), axis=0)
             for i in range(len(membership_matrix[0]))
         ])
         # Every sum((U_ik)^m)
@@ -106,7 +102,7 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
 
         return centroids
 
-    def update_matrix(self, centroids, values, belonging_matrix):
+    def update_matrix(self, centroids, values):
 
         M = 2/(self.fuzziness - 1)
 
@@ -114,28 +110,20 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
         distances_matrix_numerators = np.array([np.repeat([x], self.n_clusters) for x in distances_matrix])
         distances_matrix_numerators = np.reshape(distances_matrix_numerators,
                                                  (len(values) * self.n_clusters, self.n_clusters))
+
         distances_matrix_denominators = np.reshape(distances_matrix, (len(values), self.n_clusters))
-        # print(np.shape(distances_matrix_denominators))
-        # print(distances_matrix_denominators)
-        # print(np.shape(distances_matrix_denominators))
         distances_matrix_denominators = np.array([list(x) * self.n_clusters for x in distances_matrix_denominators])
-        # print(distances_matrix_denominators)
         distances_matrix_denominators = np.reshape(distances_matrix_denominators,
                                                    (len(values) * self.n_clusters, self.n_clusters))
-        # print(np.shape(distances_matrix_numerators))
-        # print(distances_matrix_numerators)
-        # print(np.shape(distances_matrix_denominators))
-        # print(distances_matrix_denominators)
+
         belonging_matrix = np.divide(distances_matrix_numerators, distances_matrix_denominators)
         belonging_matrix = belonging_matrix ** M
-        # print(np.shape(belonging_matrix))
-        # print(belonging_matrix)
-        belonging_matrix = np.sum(belonging_matrix, axis=1)
-        # print(np.shape(belonging_matrix))
-        # print(belonging_matrix)
 
+        belonging_matrix = np.sum(belonging_matrix, axis=1)
         belonging_matrix = belonging_matrix ** (-1)
         belonging_matrix = np.reshape(belonging_matrix, (len(values), self.n_clusters))
+
+        return belonging_matrix
 
         # print(belonging_matrix)
         # distances = np.reshape(distances, (len(values), self.n_clusters))

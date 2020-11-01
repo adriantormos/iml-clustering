@@ -10,7 +10,7 @@
 	"algorithm": {
 			"name": "fcm",
 			"n_clusters": 16,
-			"max_iter": 1,
+			"max_iter": 10,
 			"finish_threshold": 0,
 			"fuzziness": 2,
 			"distance_metric": "euclidean",
@@ -22,9 +22,9 @@
 		"name": "unsupervised",
 		"use_best_parameters": 0,
 		"parameters": [],
-		"n_runs": 1,
+		"n_runs": 5,
 		"metrics": ["davies_bouldin"]
 	},
-	"charts": [{"name": "class_frequencies"}],
+	"charts": [{"name": "class_frequencies"}, {"name": "show_metrics_table", "metrics": ["davies_bouldin", "adjusted_rand"]}],
 	"manual_seed": 0
 }

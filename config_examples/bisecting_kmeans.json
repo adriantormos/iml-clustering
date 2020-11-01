@@ -9,6 +9,6 @@
 		"n_clusters": 16,
 		"max_iter": 50
 	},
-	"charts": [{"name": "class_frequencies"}],
+	"charts": [{"name": "class_frequencies"}, {"name": "show_metrics_table", "metrics": ["davies_bouldin", "adjusted_rand"]}],
 	"manual_seed": 1
 }

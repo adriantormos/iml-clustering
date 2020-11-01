@@ -16,6 +16,6 @@
 		"use_best_parameters": 0,
 		"n_runs": 5
 	},
-	"charts": [{"name": "class_frequencies"}],
+	"charts": [{"name": "class_frequencies"}, {"name": "show_metrics_table", "metrics": ["davies_bouldin", "adjusted_rand"]}],
 	"manual_seed": 0
 }

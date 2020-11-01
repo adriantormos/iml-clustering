@@ -7,15 +7,15 @@
     "algorithm": {
         "name": "kmeans",
         "n_clusters": 2,
-        "max_iter": 1
+        "max_iter": 100
     },
     "optimizer": {
         "name": "unsupervised",
         "metrics": ["davies_bouldin"],
         "parameters": [],
         "use_best_parameters": 0,
-        "n_runs": 1
+        "n_runs": 5
     },
-    "charts": [{"name": "show_pair_wise_scatter_plot", "figsize": [20,20], "title": "Parallel coordinates of the "}],
+    "charts": [{"name": "class_frequencies"}, {"name": "show_metrics_table", "metrics": ["davies_bouldin", "adjusted_rand"]}],
     "manual_seed": 0
 }

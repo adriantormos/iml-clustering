@@ -1,0 +1,26 @@
+{
+  "data": {
+    "name": "kropt",
+    "balance": 0,
+    "prepare": [
+      {
+        "name": "shuffle"
+      }
+    ]
+  },
+  "charts": [
+    {
+      "name": "show_feature_histograms",
+      "bins": 20
+    },
+    {
+      "name": "show_correlation_among_variables",
+      "title": "Kropt features correlation heatmap",
+      "figsize": [
+        10,
+        10
+      ]
+    }
+  ],
+  "manual_seed": 0
+}

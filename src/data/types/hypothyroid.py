@@ -23,6 +23,7 @@ class HypothyroidDataset(Dataset):
         self.nominal_features = [name for name in self.data.columns if name not in self.numerical_features + [self.class_feature]]
         self.classes_to_numerical = config['classes_to_numerical']
         self.verbose = verbose
+        self.preprocess_data = self.preprocess_dataset()
 
     def get_raw_data(self) -> (np.ndarray, np.ndarray):
         if self.only_numerical:
@@ -32,7 +33,31 @@ class HypothyroidDataset(Dataset):
         labels = self.data[self.class_feature].to_numpy()
         return values, labels
 
+    def get_raw_dataframe(self) -> pd.DataFrame:
+        if self.only_numerical:
+            data = self.data[self.numerical_features + [self.class_feature]]
+        else:
+            data = self.data
+        return data
+
     def get_preprocessed_data(self) -> (np.ndarray, np.ndarray):
+        if self.only_numerical:
+            values = self.preprocess_data[self.numerical_features].to_numpy()
+        else:
+            values = self.preprocess_data.loc[:, self.preprocess_data.columns != self.class_feature].to_numpy()
+        labels = self.preprocess_data[self.class_feature].to_numpy()
+        return values, labels
+
+    def get_preprocessed_dataframe(self) -> pd.DataFrame:
+        if self.only_numerical:
+            data = self.preprocess_data[self.numerical_features]
+        else:
+            data = self.preprocess_data
+        return data
+
+    # Auxiliary methods
+
+    def preprocess_dataset(self):
         data = self.data
 
         if self.verbose:
@@ -46,18 +71,18 @@ class HypothyroidDataset(Dataset):
         if self.verbose:
             nan_count = data.isnull().sum().sum()
             print('    ', 'Total number of NaNs: ', nan_count, '; relative: ',
-            (nan_count * 100) / (len(data.index) * len(data.columns)), '%')
+                  (nan_count * 100) / (len(data.index) * len(data.columns)), '%')
 
         columns_to_drop = []
         for feature_index in data.columns:
             nan_count = data[feature_index].isnull().sum()
-            if nan_count > (len(data.index)/2):
+            if nan_count > (len(data.index) / 2):
                 columns_to_drop.append(feature_index)
         data.drop(columns=columns_to_drop, inplace=True)
         self.numerical_features = [name for name in self.numerical_features if name not in columns_to_drop]
         self.nominal_features = [name for name in self.nominal_features if name not in columns_to_drop]
         if self.verbose:
-            print('    ','Deleted because of too many NaN values the features with name:', columns_to_drop)
+            print('    ', 'Deleted because of too many NaN values the features with name:', columns_to_drop)
 
         # Numerical features -> replace the NaN values by the mean and normalize
         for feature_index in self.numerical_features:
@@ -98,9 +123,4 @@ class HypothyroidDataset(Dataset):
         if self.verbose:
             print('Finished data preprocessing')
 
-        if self.only_numerical:
-            values = data[self.numerical_features].to_numpy()
-        else:
-            values = data.loc[:, data.columns != self.class_feature].to_numpy()
-        labels = data[self.class_feature].to_numpy()
-        return values, labels
+        return data

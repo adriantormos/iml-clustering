@@ -72,6 +72,9 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
 
         return self.compute_defuzzification(membership_matrix)
 
+    def merge_labels(self, labels, output_labels):
+        return output_labels
+
     def save(self):
         raise NotImplementedError('Method not implemented')
 

@@ -1,0 +1,51 @@
+{
+  "data": {
+    "name": "kropt",
+    "balance": 0,
+    "prepare": [
+      {
+        "name": "shuffle"
+      }
+    ]
+  },
+  "algorithm": {
+    "name": "dbscan",
+    "metric": "euclidean",
+    "algorithm": "auto",
+    "eps": 0.3
+  },
+  "optimizer": {
+    "name": "unsupervised",
+    "metrics": [
+      "davies_bouldin"
+    ],
+    "parameters": [
+      {
+        "name": "eps",
+        "values": [
+          0.2,
+          0.22,
+          0.24,
+          0.26,
+          0.28,
+          0.3
+        ]
+      }
+    ],
+    "use_best_parameters": 0,
+    "n_runs": 2
+  },
+  "charts": [
+    {
+      "name": "class_frequencies_separate"
+    },
+    {
+      "name": "show_metrics_table",
+      "metrics": [
+        "davies_bouldin",
+        "adjusted_rand"
+      ]
+    }
+  ],
+  "manual_seed": 0
+}

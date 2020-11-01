@@ -9,18 +9,34 @@
     ]
   },
   "algorithm": {
-    "name": "kmeans",
+    "name": "kmedians",
     "n_clusters": 18,
-    "max_iter": 100
+    "max_iter": 100,
+    "init_centroids": "random"
   },
   "optimizer": {
     "name": "unsupervised",
     "metrics": [
       "davies_bouldin"
     ],
-    "parameters": [],
+    "parameters": [
+      {
+        "name": "n_clusters",
+        "values": [
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      }
+    ],
     "use_best_parameters": 0,
-    "n_runs": 5
+    "n_runs": 2
   },
   "charts": [
     {

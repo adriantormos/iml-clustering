@@ -5,6 +5,7 @@ from src.auxiliary.visualize_methods import compare_multiple_lines
 from src.optimizers.optimizer import Optimizer
 from src.factory.algorithm import AlgorithmFactory
 from src.auxiliary.evaluation_methods import run_evaluation_metric
+from src.algorithms.unsupervised_algorithm import UnsupervisedAlgorithm
 
 
 class UnsupervisedOptimizer(Optimizer):
@@ -21,7 +22,7 @@ class UnsupervisedOptimizer(Optimizer):
         self.algorithm_config = algorithm_config
         self.optimizer_config = optimizer_config
 
-    def run(self, values, labels=None):
+    def run(self, values, labels):
         if self.verbose:
             print('Starting unsupervised optimizer.', 'Algorithm: ' + self.algorithm_config['name'] + '.', 'Optimizer config:')
             print_pretty_json(self.optimizer_config)
@@ -42,7 +43,7 @@ class UnsupervisedOptimizer(Optimizer):
                 best_labels = None
                 for value in parameter_values:
                     algorithm_config[parameter_name] = value
-                    score, output_labels = self.run_algorithm(algorithm_config, values)
+                    score, output_labels = self.run_algorithm(algorithm_config, values, labels=None)
                     scores.append(score)
                     if best_score is None or score < best_score:
                         best_score = score
@@ -60,20 +61,23 @@ class UnsupervisedOptimizer(Optimizer):
             if self.use_best_parameters:
                 _, output_labels = best_global_labels # TODO merge all the best parameters
             else:
-                _, output_labels = self.run_algorithm(self.algorithm_config, values)
+                _, output_labels = self.run_algorithm(self.algorithm_config, values, labels)
         else:
-            _, output_labels = self.run_algorithm(self.algorithm_config, values)
+            _, output_labels = self.run_algorithm(self.algorithm_config, values, labels)
 
         return output_labels
 
     # Auxiliary methods
 
-    def run_algorithm(self, algorithm_config, values):
+    def run_algorithm(self, algorithm_config, values, labels):
         best_score = None
         best_labels = None
         for _ in range(self.n_runs):
-            algorithm = AlgorithmFactory.select_algorithm(algorithm_config, self.output_path, False)
-            output_labels = algorithm.train(values, None)
+            algorithm: UnsupervisedAlgorithm = AlgorithmFactory.select_algorithm(algorithm_config, self.output_path, True) # TODO resolve this disorder
+            if labels is None:
+                output_labels = algorithm.run(values)
+            else:
+                output_labels = algorithm.train(values, labels)
             score = self.evaluate_algorithm(values, output_labels)
             if best_score is None or score < best_score:
                 best_score = score

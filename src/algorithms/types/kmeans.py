@@ -1,10 +1,10 @@
-from src.algorithms.algorithm import Algorithm
+from src.algorithms.unsupervised_algorithm import UnsupervisedAlgorithm
 import numpy as np
 from scipy.spatial import distance
 import time
 
 
-class KMeansAlgorithm(Algorithm):
+class KMeansAlgorithm(UnsupervisedAlgorithm):
 
     # Main methods
 
@@ -17,7 +17,7 @@ class KMeansAlgorithm(Algorithm):
         if 'maximization_function' in config:
             self.maximization_function = config['maximization_function']
 
-    def train(self, values: np.ndarray, labels=None) -> np.ndarray: # Unsupervised learning
+    def run(self, values: np.ndarray) -> np.ndarray: # Unsupervised learning
         has_converged = False
 
         if self.verbose:
@@ -66,9 +66,6 @@ class KMeansAlgorithm(Algorithm):
                   'Algorithm converged.' if has_converged else 'Algorithm did not converge.')
 
         return labels
-
-    def evaluate(self, values: np.ndarray) -> np.ndarray:
-        raise NotImplementedError('Method not implemented') # Return for each value their nearest centroid label
 
     def save(self):
         raise NotImplementedError('Method not implemented in interface class')

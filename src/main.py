@@ -58,10 +58,11 @@ def main(config_path: str, output_path: str, visualize: bool, verbose: bool):
         output_labels = algorithm.train(values, labels)
 
     # Visualize results
-    show_charts(charts_config, output_path, output_labels, visualize, verbose)
+    show_charts(charts_config, output_path, values, labels, output_labels, visualize, verbose)
 
     # Save config json and algorithm model
     if output_path is not None:
+        np.save(output_path + '/predicted_labels', output_labels)
         save_json(output_path + '/config', config)
         #algorithm.save() -> Not implemented yet
 

@@ -1,10 +1,10 @@
-from src.algorithms.algorithm import Algorithm
+from src.algorithms.unsupervised_algorithm import UnsupervisedAlgorithm
 from src.algorithms.types.kmeans import KMeansAlgorithm
 import numpy as np
 import time
 
 
-class BisectingKMeansAlgorithm(Algorithm):
+class BisectingKMeansAlgorithm(UnsupervisedAlgorithm):
 
     # Main methods
 
@@ -14,7 +14,7 @@ class BisectingKMeansAlgorithm(Algorithm):
         self.verbose = verbose
         self.kmeans = KMeansAlgorithm({'n_clusters': 2, 'max_iter': self.max_iter}, output_path, verbose)
 
-    def train(self, values: np.ndarray, labels=None):
+    def run(self, values: np.ndarray):
         if self.verbose:
             print('Starting bisecting k-means.', 'Maximum {} iterations'.format(self.max_iter))
             start_time = time.time()
@@ -52,9 +52,6 @@ class BisectingKMeansAlgorithm(Algorithm):
             print('Finished bisecting k-means in {0:.3f} seconds.'.format(time.time() - start_time))
 
         return labels
-
-    def evaluate(self, values: np.ndarray) -> np.ndarray:
-        raise NotImplementedError('Method not implemented')
 
     def save(self):
         raise NotImplementedError('Method not implemented in interface class')

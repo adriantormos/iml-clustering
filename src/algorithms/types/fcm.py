@@ -1,10 +1,10 @@
-from src.algorithms.algorithm import Algorithm
+from src.algorithms.unsupervised_algorithm import UnsupervisedAlgorithm
 from src.auxiliary.file_methods import print_pretty_json
 import numpy as np
 import time
 
 
-class FCMAlgorithm(Algorithm):
+class FCMAlgorithm(UnsupervisedAlgorithm):
 
     # Main methods
 

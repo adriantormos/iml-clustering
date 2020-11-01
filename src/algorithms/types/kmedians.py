@@ -1,10 +1,10 @@
-from src.algorithms.algorithm import Algorithm
+from src.algorithms.unsupervised_algorithm import UnsupervisedAlgorithm
 from src.algorithms.types.kmeans import KMeansAlgorithm
 import numpy as np
 from scipy.spatial import distance
 
 
-class KMediansAlgorithm(Algorithm):
+class KMediansAlgorithm(UnsupervisedAlgorithm):
 
     # Main methods
 

@@ -1,0 +1,44 @@
+{
+  "data": {
+    "name": "kropt",
+    "balance": 0,
+    "prepare": [
+      {
+        "name": "shuffle"
+      }
+    ]
+  },
+  "algorithm": {
+    "name": "kmeans",
+    "n_clusters": 18,
+    "max_iter": 100
+  },
+  "optimizer": {
+    "name": "unsupervised",
+    "metrics": [
+      "davies_bouldin"
+    ],
+    "parameters": [],
+    "use_best_parameters": 0,
+    "n_runs": 5
+  },
+  "charts": [
+    {
+      "name": "class_frequencies"
+    },
+    {
+      "name": "show_metrics_table",
+      "metrics": [
+        "davies_bouldin",
+        "adjusted_rand"
+      ]
+    },
+    {
+      "name": "show_classification_report"
+    },
+    {
+      "name": "show_confusion_matrix"
+    }
+  ],
+  "manual_seed": 0
+}

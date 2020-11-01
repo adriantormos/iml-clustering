@@ -6,16 +6,16 @@
 	},
 	"algorithm": {
 		"name": "kmeans",
-		"n_clusters": 18,
+		"n_clusters": 16,
 		"max_iter": 100
 	},
 	"optimizer": {
 		"name": "unsupervised",
 		"metrics": ["davies_bouldin"],
-		"parameters": [],
+		"parameters": [{"name": "n_clusters", "values": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}],
 		"use_best_parameters": 0,
 		"n_runs": 5
 	},
-	"charts": [{"name": "class_frequencies"}, {"name": "show_metrics_table", "metrics": ["davies_bouldin", "adjusted_rand"]}, {"name": "show_classification_report"}, {"name": "show_confusion_matrix"}],
+	"charts": [{"name": "class_frequencies"}],
 	"manual_seed": 0
 }

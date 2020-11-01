@@ -50,7 +50,7 @@ class HypothyroidDataset(Dataset):
 
     def get_preprocessed_dataframe(self) -> pd.DataFrame:
         if self.only_numerical:
-            data = self.preprocessed_data[self.numerical_features]
+            data = self.preprocessed_data[self.numerical_features + [self.class_feature]]
         else:
             data = self.preprocessed_data
         return data

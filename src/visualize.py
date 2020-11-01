@@ -7,13 +7,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pandas.plotting import parallel_coordinates
-
-# correlation among variables
-# parallel coordinates
-# pair-wise scatter plot
-# clusters 2-D
-# https://towardsdatascience.com/the-art-of-effective-visualization-of-multi-dimensional-data-6c7202990c57
-# https://www.kaggle.com/minc33/visualizing-high-dimensional-clusters
+#from plotly.offline import plot
+#import plotly.graph_objs as go
+#from sklearn.decomposition import PCA
 
 
 def show_charts(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
@@ -102,7 +98,7 @@ def show_correlation_among_variables(config, output_path, values, labels, output
 def show_parallel_coordinates(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
     f, ax = plt.subplots(figsize=(config['figsize'][0], config['figsize'][1]))
     plt.title(config['title'] + ' original labels')
-    pc = parallel_coordinates(dataframe, dataframe.columns[-1])
+    pc = parallel_coordinates(dataframe, dataframe.columns[-1], color=('#FFE888', '#FF9999'))
     if output_path is not None:
         plt.savefig(output_path + '/parallel_coordinates_labels', bbox_inches='tight')
     plt.show()
@@ -117,15 +113,63 @@ def show_parallel_coordinates(config, output_path, values, labels, output_labels
 
 
 def show_pair_wise_scatter_plot(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
-    cols = ['density', 'residual sugar', 'total sulfur dioxide', 'fixed acidity', 'wine_type']
-    print(dataframe.columns[-1])
-    pp = sns.pairplot(dataframe['cols'], hue=dataframe.columns[-1], height=1.8, aspect=1.8,
-                      palette={"red": "#FF9999", "white": "#FFE888"},
+    pp = sns.pairplot(dataframe, hue=dataframe.columns[-1], height=1.8, aspect=1.8, plot_kws=dict(edgecolor="black", linewidth=0.5))
+    fig = pp.fig
+    fig.subplots_adjust(top=0.93, wspace=0.3)
+    t = fig.suptitle(config['title']  + ' for the original labels', fontsize=14)
+    if output_path is not None:
+        plt.savefig(output_path + '/pair_wise_scatter_plot_labels', bbox_inches='tight')
+    plt.show()
+
+    aux = dataframe.copy()
+    aux[dataframe.columns[-1]] = output_labels
+    pp = sns.pairplot(aux, hue=aux.columns[-1], height=1.8, aspect=1.8,
                       plot_kws=dict(edgecolor="black", linewidth=0.5))
     fig = pp.fig
     fig.subplots_adjust(top=0.93, wspace=0.3)
-    t = fig.suptitle('Wine Attributes Pairwise Plots', fontsize=14)
+    t = fig.suptitle(config['title'] + ' for the predicted labels', fontsize=14)
+    if output_path is not None:
+        plt.savefig(output_path + '/pair_wise_scatter_plot_predicted_labels', bbox_inches='tight')
     plt.show()
 
-def show_clusters_pca_2d(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
-    pass
+
+#def show_clusters_pca_2d(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
+#    # trace1 is for 'Cluster 0'
+#    plotX = dataframe.copy()
+#    pca_2d = PCA(n_components=2)
+#    PCs_2d = pd.DataFrame(pca_2d.fit_transform(plotX.drop(["Class"], axis=1)))
+#    PCs_2d.columns = ["PC1_2d", "PC2_2d"]
+#    plotX = pd.concat([plotX, PCs_2d], axis=1, join='inner')
+#    cluster0 = plotX[plotX["Class"] == 0]
+#    cluster1 = plotX[plotX["Class"] == 1]
+#
+#    trace1 = go.Scatter(
+#        x=cluster0["PC1_2d"],
+#        y=cluster0["PC2_2d"],
+#        mode="markers",
+#        name="Cluster 0",
+#        marker=dict(color='rgba(65, 0, 0, 0.8)'),
+#        text=None)
+#    trace2 = go.Scatter(
+#        x=cluster1["PC1_2d"],
+#        y=cluster1["PC2_2d"],
+#        mode="markers",
+#        name="Cluster 1",
+#        marker=dict(color='rgba(65, 65, 0, 0.8)'),
+#        text=None)
+#
+#    title = "Visualizing clusters in two dimensions using PCA of the kropt dataset"
+#
+#    fig = go.Figure(
+#        layout=go.Layout(
+#            title=title,
+#            xaxis=dict(title='PC1', ticklen=5, zeroline=False),
+#            yaxis=dict(title='PC2', ticklen=5, zeroline=False)
+#        )
+#    )
+#    #fig.add_layout_image(layout)
+#    fig.add_trace(trace1)
+#    fig.add_trace(trace2)
+#    if output_path is not None:
+#        fig.write_image(output_path + '/plot_clusters_2d_pca_labels.png')
+#    plot(fig)

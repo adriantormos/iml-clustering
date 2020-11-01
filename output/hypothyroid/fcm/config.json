@@ -1,0 +1,68 @@
+{
+  "data": {
+    "name": "hypothyroid",
+    "balance": 0,
+    "classes_to_numerical": {
+      "compensated_hypothyroid": 0,
+      "negative": 1,
+      "primary_hypothyroid": 2,
+      "secondary_hypothyroid": 3
+    },
+    "only_numerical": 0,
+    "prepare": [
+      {
+        "name": "shuffle"
+      }
+    ]
+  },
+  "algorithm": {
+    "name": "fcm",
+    "n_clusters": 4,
+    "max_iter": 40,
+    "finish_threshold": 0.0002,
+    "fuzziness": 2,
+    "distance_metric": "euclidean",
+    "initial_matrix_computation": "random",
+    "defuzzification_method": "max_value",
+    "objective_computation": "euclidean"
+  },
+  "optimizer": {
+    "name": "unsupervised",
+    "metrics": [
+      "davies_bouldin"
+    ],
+    "parameters": [
+      {
+        "name": "n_clusters",
+        "values": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    ],
+    "use_best_parameters": 0,
+    "n_runs": 3
+  },
+  "charts": [
+    {
+      "name": "class_frequencies"
+    },
+    {
+      "name": "show_metrics_table",
+      "metrics": [
+        "davies_bouldin",
+        "adjusted_rand"
+      ]
+    },
+    {
+      "name": "show_classification_report"
+    },
+    {
+      "name": "show_confusion_matrix"
+    }
+  ],
+  "manual_seed": 0
+}

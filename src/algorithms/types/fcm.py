@@ -55,8 +55,6 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
             membership_matrix = self.update_matrix(centroids, values)
             score = self.compute_objective(values, centroids, membership_matrix)
             if goal and (abs(goal - score) <= self.finish_threshold):
-                if self.verbose:
-                    print(goal, score)
                 has_converged = True
             goal = score
 
@@ -66,10 +64,11 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
             index += 1
 
         if self.verbose:
-            print('Finished FCM',
+            print('Finished FCM.',
                   '{} iterations performed in'.format(index),
                   '{0:.3f} seconds.'.format(time.time() - start_time),
-                  'Algorithm converged.' if has_converged else 'Algorithm did not converge.')
+                  'Algorithm converged.' if has_converged else 'Algorithm did not converge.',
+                  'Goal: {0:.5f}, Score: {0:.5f}'. format(goal, score))
 
         return self.compute_defuzzification(membership_matrix)
 

@@ -41,6 +41,8 @@ class UnsupervisedAlgorithm(Algorithm):
         counts1, unique1 = zip(*sorted(zip(counts1, unique1), reverse=True))
         unique2, counts2 = np.unique(output_labels, return_counts=True)
         counts2, unique2 = zip(*sorted(zip(counts2, unique2), reverse=True))
+        if len(unique1) != len(unique2):
+            raise Exception('The unsupervised algorithm extracted less classes than the ones in the dataset')
         #print(unique1, counts1)
         #print(unique2, counts2)
         result_labels = np.zeros(len(labels))

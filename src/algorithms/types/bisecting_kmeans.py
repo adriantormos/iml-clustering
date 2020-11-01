@@ -25,7 +25,7 @@ class BisectingKMeansAlgorithm(UnsupervisedAlgorithm):
             return np.zeros(len(values))
 
         # Initial separation
-        labels: np.ndarray = self.kmeans.train(values)
+        labels: np.ndarray = self.kmeans.run(values)
         found_clusters = 2
 
         if self.verbose:
@@ -40,7 +40,7 @@ class BisectingKMeansAlgorithm(UnsupervisedAlgorithm):
             rows_from_worst_cluster = values[labels == worst_cluster]
 
             # Perform k-means with worst cluster
-            labels_to_merge = self.kmeans.train(rows_from_worst_cluster)
+            labels_to_merge = self.kmeans.run(rows_from_worst_cluster)
             labels = self.merge_labels(labels, labels_to_merge, worst_cluster, [worst_cluster, found_clusters])
 
             found_clusters += 1

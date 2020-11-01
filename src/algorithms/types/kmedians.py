@@ -21,7 +21,7 @@ class KMediansAlgorithm(UnsupervisedAlgorithm):
                                       output_path, verbose)
 
     def run(self, values: np.ndarray) -> np.ndarray: # Unsupervised learning
-        return self.kmeans.train(values)
+        return self.kmeans.run(values)
 
     def save(self):
         raise NotImplementedError('Method not implemented in interface class')

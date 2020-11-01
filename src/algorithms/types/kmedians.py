@@ -20,11 +20,8 @@ class KMediansAlgorithm(UnsupervisedAlgorithm):
                                        'maximization_function': 'median'},
                                       output_path, verbose)
 
-    def train(self, values: np.ndarray, labels=None) -> np.ndarray: # Unsupervised learning
+    def run(self, values: np.ndarray) -> np.ndarray: # Unsupervised learning
         return self.kmeans.train(values)
-
-    def evaluate(self, values: np.ndarray) -> np.ndarray:
-        raise NotImplementedError('Method not implemented') # Return for each value their nearest centroid label
 
     def save(self):
         raise NotImplementedError('Method not implemented in interface class')

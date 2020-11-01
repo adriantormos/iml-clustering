@@ -41,8 +41,13 @@ class UnsupervisedAlgorithm(Algorithm):
         counts1, unique1 = zip(*sorted(zip(counts1, unique1), reverse=True))
         unique2, counts2 = np.unique(output_labels, return_counts=True)
         counts2, unique2 = zip(*sorted(zip(counts2, unique2), reverse=True))
+        #print(unique1, counts1)
+        #print(unique2, counts2)
         result_labels = np.zeros(len(labels))
         for index, _class1 in enumerate(unique1):
             _class2 = unique2[index]
             result_labels[output_labels == _class2] = _class1
+        #print(labels)
+        #print(output_labels)
+        #print(result_labels)
         return result_labels

@@ -19,6 +19,7 @@ def class_frequencies(config, output_path, values, labels, output_labels, visual
     unique1, counts1 = np.unique(labels, return_counts=True)
     #counts1, unique1 = zip(*sorted(zip(counts1, unique1), reverse=True)) -> show sorted
     unique2, counts2 = np.unique(output_labels, return_counts=True)
+    print(unique2, counts2)
 
     rows = [['class', 'original_samples_distribution', 'predicted_samples_distribution']]
     x = PrettyTable()

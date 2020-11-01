@@ -38,7 +38,7 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
         if self.fuzziness <= 1:
             raise Exception('Algorithm only implemented for fuzziness > 1')
 
-    def train(self, values: np.ndarray, labels=None) -> np.ndarray: # Unsupervised learning
+    def run(self, values: np.ndarray) -> np.ndarray: # Unsupervised learning
         if self.verbose:
             print('Starting FCM. Config:')
             print_pretty_json(self.config)
@@ -76,9 +76,6 @@ class FCMAlgorithm(UnsupervisedAlgorithm):
                   'Algorithm converged.' if has_converged else 'Algorithm did not converge.')
 
         return self.compute_defuzzification(membership_matrix)
-
-    def evaluate(self, values: np.ndarray) -> np.ndarray:
-        raise NotImplementedError('Method not implemented')
 
     def save(self):
         raise NotImplementedError('Method not implemented')

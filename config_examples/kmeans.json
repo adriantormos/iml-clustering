@@ -7,15 +7,15 @@
 	"algorithm": {
 		"name": "kmeans",
 		"n_clusters": 18,
-		"max_iter": 100
+		"max_iter": 1
 	},
 	"optimizer": {
 		"name": "unsupervised",
 		"metrics": ["davies_bouldin"],
 		"parameters": [],
 		"use_best_parameters": 0,
-		"n_runs": 5
+		"n_runs": 1
 	},
-	"charts": [{"name": "class_frequencies"}, {"name": "show_metrics_table", "metrics": ["davies_bouldin", "adjusted_rand"]}, {"name": "show_classification_report"}, {"name": "show_confusion_matrix"}],
+	"charts": [{"name": "class_frequencies"}],
 	"manual_seed": 0
 }

@@ -26,7 +26,7 @@ class KMeansAlgorithm(UnsupervisedAlgorithm):
             start_time = time.time()
 
         # Initialize centroids
-        if self.init_centroids is 'random':
+        if self.init_centroids == 'random':
             centroids: np.ndarray = np.array([values[i] for i in np.random.choice(len(values),
                                                                                   size=self.n_clusters, replace=False)])
         elif self.init_centroids is 'kmeans++':

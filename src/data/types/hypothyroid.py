@@ -23,7 +23,7 @@ class HypothyroidDataset(Dataset):
         self.nominal_features = [name for name in self.data.columns if name not in self.numerical_features + [self.class_feature]]
         self.classes_to_numerical = config['classes_to_numerical']
         self.verbose = verbose
-        self.preprocess_data = self.preprocess_dataset()
+        self.preprocessed_data = self.preprocess_dataset()
 
     def get_raw_data(self) -> (np.ndarray, np.ndarray):
         if self.only_numerical:
@@ -42,17 +42,17 @@ class HypothyroidDataset(Dataset):
 
     def get_preprocessed_data(self) -> (np.ndarray, np.ndarray):
         if self.only_numerical:
-            values = self.preprocess_data[self.numerical_features].to_numpy()
+            values = self.preprocessed_data[self.numerical_features].to_numpy()
         else:
-            values = self.preprocess_data.loc[:, self.preprocess_data.columns != self.class_feature].to_numpy()
-        labels = self.preprocess_data[self.class_feature].to_numpy()
+            values = self.preprocessed_data.loc[:, self.preprocessed_data.columns != self.class_feature].to_numpy()
+        labels = self.preprocessed_data[self.class_feature].to_numpy()
         return values, labels
 
     def get_preprocessed_dataframe(self) -> pd.DataFrame:
         if self.only_numerical:
-            data = self.preprocess_data[self.numerical_features]
+            data = self.preprocessed_data[self.numerical_features]
         else:
-            data = self.preprocess_data
+            data = self.preprocessed_data
         return data
 
     # Auxiliary methods

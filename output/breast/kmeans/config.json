@@ -1,0 +1,57 @@
+{
+  "data": {
+    "name": "breast",
+    "classes_to_numerical": {
+      "benign": 0,
+      "malignant": 1
+    },
+    "prepare": [
+      {
+        "name": "shuffle"
+      }
+    ]
+  },
+  "algorithm": {
+    "name": "kmeans",
+    "n_clusters": 2,
+    "max_iter": 50,
+    "init_centroids": "random"
+  },
+  "optimizer": {
+    "name": "unsupervised",
+    "metrics": [
+      "davies_bouldin"
+    ],
+    "parameters": [
+      {
+        "name": "n_clusters",
+        "values": [
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "use_best_parameters": 0,
+    "n_runs": 3
+  },
+  "charts": [
+    {
+      "name": "class_frequencies"
+    },
+    {
+      "name": "show_metrics_table",
+      "metrics": [
+        "davies_bouldin",
+        "adjusted_rand"
+      ]
+    },
+    {
+      "name": "show_classification_report"
+    },
+    {
+      "name": "show_confusion_matrix"
+    }
+  ],
+  "manual_seed": 0
+}

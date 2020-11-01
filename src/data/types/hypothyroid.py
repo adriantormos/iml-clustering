@@ -21,6 +21,7 @@ class HypothyroidDataset(Dataset):
         self.numerical_features = ['age', 'TSH', 'T3', 'TT4', 'T4U', 'FTI', 'TBG']
         self.null_values = [b'?']
         self.nominal_features = [name for name in self.data.columns if name not in self.numerical_features + [self.class_feature]]
+        self.classes_to_numerical = config['classes_to_numerical']
         self.verbose = verbose
 
     def get_raw_data(self) -> (np.ndarray, np.ndarray):
@@ -89,6 +90,10 @@ class HypothyroidDataset(Dataset):
 
             # do hot encoding
             data = one_hot_encoding(data, self.nominal_features)
+
+        # Convert classes to numerical
+        data[self.class_feature] = data[self.class_feature].str.decode("utf-8")
+        data[self.class_feature] = data[self.class_feature].map(self.classes_to_numerical)
 
         if self.verbose:
             print('Finished data preprocessing')

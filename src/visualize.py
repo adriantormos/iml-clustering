@@ -4,18 +4,23 @@ from src.auxiliary.evaluation_methods import run_evaluation_metric
 from src.auxiliary.file_methods import save_csv
 import sklearn.metrics as metrics
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # correlation among variables
+# parallel coordinates
+# pair-wise scatter plot
+# clusters 2-D
 # https://towardsdatascience.com/the-art-of-effective-visualization-of-multi-dimensional-data-6c7202990c57
 # https://www.kaggle.com/minc33/visualizing-high-dimensional-clusters
 
 
-def show_charts(config, output_path, values, labels, output_labels, visualize, verbose):
+def show_charts(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
     for chart in config:
-        eval(chart['name'])(chart, output_path, values, labels, output_labels, visualize, verbose)
+        eval(chart['name'])(chart, output_path, values, labels, output_labels, visualize, dataframe, verbose)
 
 
-def class_frequencies(config, output_path, values, labels, output_labels, visualize, verbose):
+def class_frequencies(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
     unique1, counts1 = np.unique(labels, return_counts=True)
     #counts1, unique1 = zip(*sorted(zip(counts1, unique1), reverse=True)) -> show sorted
     unique2, counts2 = np.unique(output_labels, return_counts=True)
@@ -33,7 +38,7 @@ def class_frequencies(config, output_path, values, labels, output_labels, visual
     print(x)
 
 
-def show_metrics_table(config, output_path, values, labels, output_labels, visualize, verbose):
+def show_metrics_table(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
     rows = [[''] + config['metrics']]
     x = PrettyTable()
     x.field_names = [''] + config['metrics']
@@ -47,16 +52,45 @@ def show_metrics_table(config, output_path, values, labels, output_labels, visua
     print(x)
 
 
-def show_classification_report(config, output_path, values, labels, output_labels, visualize, verbose):
+def show_classification_report(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
     print(metrics.classification_report(labels, output_labels))
     classification_report = metrics.classification_report(labels, output_labels, output_dict=True)
     classification_report = pd.DataFrame(classification_report).transpose()
     classification_report.to_csv(output_path + '/classification_report.csv', index=False)
 
 
-def show_confusion_matrix(config, output_path, values, labels, output_labels, visualize, verbose):
+def show_confusion_matrix(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
     print('Confusion matrix')
     print(metrics.confusion_matrix(labels, output_labels))
     confusion_matrix = metrics.confusion_matrix(labels, output_labels)
     confusion_matrix = pd.DataFrame(confusion_matrix).transpose()
     confusion_matrix.to_csv(output_path + '/confusion_matrix.csv', index=False)
+
+
+def show_feature_histograms(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
+    dataframe.hist(bins=config['bins'], color='steelblue', edgecolor='black', linewidth=1.0, xlabelsize=8, ylabelsize=8, grid=False)
+    if output_path is not None:
+        plt.savefig(output_path + '/feature_histograms', bbox_inches='tight')
+    plt.show()
+
+
+def show_correlation_among_variables(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
+    f, ax = plt.subplots(figsize=(config['figsize'][0], config['figsize'][1]))
+    corr = dataframe.corr()
+    hm = sns.heatmap(round(corr, 2), annot=True, ax=ax, cmap="coolwarm", fmt='.2f',linewidths=.05)
+    f.subplots_adjust(top=0.93)
+    t = f.suptitle(config['title'], fontsize=14)
+    if output_path is not None:
+        plt.savefig(output_path + '/correlation_heatmap', bbox_inches='tight')
+    plt.show()
+
+
+def show_parallel_coordinates(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
+    pass
+
+
+def show_pair_wise_scatter_plot(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
+    pass
+
+def show_clusters_pca_2d(config, output_path, values, labels, output_labels, visualize, dataframe, verbose):
+    pass

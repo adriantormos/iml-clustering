@@ -3,6 +3,7 @@ from src.auxiliary.file_methods import load_arff
 import numpy as np
 import pandas as pd
 
+
 class BreastDataset(Dataset):
 
     # Main methods
@@ -12,13 +13,27 @@ class BreastDataset(Dataset):
         self.data, self.meta = load_arff('breast-w')
         self.data = pd.DataFrame(self.data)
         self.verbose = verbose
+        self.preprocessed_data = self.preprocess_dataset()
 
     def get_raw_data(self) -> (np.ndarray, np.ndarray):
         values = self.data.columns[:-1].to_numpy()
         labels = self.data.columns[-1].to_numpy()
         return values, labels
 
+    def get_raw_dataframe(self) -> pd.DataFrame:
+        return self.data
+
     def get_preprocessed_data(self) -> (np.ndarray, np.ndarray):
+        values = self.preprocessed_data[:,:-1]
+        labels = self.preprocessed_data[:,-1]
+        return values, labels
+
+    def get_preprocessed_dataframe(self) -> pd.DataFrame:
+        return self.data
+
+    # Auxiliary methods
+
+    def preprocess_dataset(self):
         if self.verbose:
             print('Started data preprocessing')
 
@@ -52,6 +67,4 @@ class BreastDataset(Dataset):
         if self.verbose:
             print('Finished data preprocessing')
 
-        values = Xcs[:,:-1]
-        labels = Xcs[:,-1]
-        return values, labels
+        return Xcs

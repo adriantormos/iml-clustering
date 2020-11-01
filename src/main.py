@@ -36,8 +36,10 @@ def main(config_path: str, output_path: str, visualize: bool, verbose: bool):
     # Load configuration
     config = load_json(config_path)
     data_config = config['data']
-    optimizer_config = config['optimizer']
-    algorithm_config = config['algorithm']
+    if 'algorithm' in config:
+        algorithm_config = config['algorithm']
+    if 'optimizer' in config:
+        optimizer_config = config['optimizer']
     charts_config = config['charts']
 
     # Set up
@@ -49,20 +51,24 @@ def main(config_path: str, output_path: str, visualize: bool, verbose: bool):
     values, labels = dataset.get_preprocessed_data()
     values, labels = dataset.prepare(values, labels)
 
-    # Run algorithm
-    if 'optimizer' in config:
-        optimizer = OptimizerFactory.select_optimizer(optimizer_config, algorithm_config, output_path, verbose)
-        output_labels = optimizer.run(values, labels)
+    # Run algorithm if required
+    if 'algorithm' in config:
+        if 'optimizer' in config:
+            optimizer = OptimizerFactory.select_optimizer(optimizer_config, algorithm_config, output_path, verbose)
+            output_labels = optimizer.run(values, labels)
+        else:
+            algorithm = AlgorithmFactory.select_algorithm(algorithm_config, output_path, verbose)
+            output_labels = algorithm.train(values, labels)
     else:
-        algorithm = AlgorithmFactory.select_algorithm(algorithm_config, output_path, verbose)
-        output_labels = algorithm.train(values, labels)
+        output_labels = None
 
     # Visualize results
-    show_charts(charts_config, output_path, values, labels, output_labels, visualize, verbose)
+    show_charts(charts_config, output_path, values, labels, output_labels, visualize, dataset.get_preprocessed_dataframe(), verbose)
 
     # Save config json and algorithm model
     if output_path is not None:
-        np.save(output_path + '/predicted_labels', output_labels)
+        if output_labels is not None:
+            np.save(output_path + '/predicted_labels', output_labels)
         save_json(output_path + '/config', config)
         #algorithm.save() -> Not implemented yet
 

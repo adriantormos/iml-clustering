@@ -10,8 +10,12 @@ class Dataset(metaclass=abc.ABCMeta):
     def __subclasshook__(cls, subclass):  # to check that the subclasses follow the interface
         return (hasattr(subclass, 'get_raw_data') and
                 callable(subclass.get_raw_data) and
+                hasattr(subclass, 'get_raw_dataframe') and
+                callable(subclass.get_raw_dataframe) and
                 hasattr(subclass, 'get_preprocessed_data') and
-                callable(subclass.get_preprocessed_data) or
+                callable(subclass.get_preprocessed_data) and
+                hasattr(subclass, 'get_preprocessed_dataframe') and
+                callable(subclass.get_preprocessed_dataframe) or
                 NotImplemented)
 
     # Main methods
@@ -25,7 +29,15 @@ class Dataset(metaclass=abc.ABCMeta):
         raise NotImplementedError('Method not implemented in interface class')
 
     @abc.abstractmethod
+    def get_raw_dataframe(self) -> pd.DataFrame:
+        raise NotImplementedError('Method not implemented in interface class')
+
+    @abc.abstractmethod
     def get_preprocessed_data(self) -> (np.ndarray, np.ndarray):
+        raise NotImplementedError('Method not implemented in interface class')
+
+    @abc.abstractmethod
+    def get_preprocessed_dataframe(self) -> pd.DataFrame:
         raise NotImplementedError('Method not implemented in interface class')
 
     def prepare(self, values: np.ndarray, labels: np.ndarray) -> (np.ndarray, np.ndarray):

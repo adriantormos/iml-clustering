@@ -41,7 +41,7 @@ class BisectingKMeansAlgorithm(UnsupervisedAlgorithm):
 
             # Perform k-means with worst cluster
             labels_to_merge = self.kmeans.run(rows_from_worst_cluster)
-            labels = self.merge_labels(labels, labels_to_merge, worst_cluster, [worst_cluster, found_clusters])
+            labels = self.merge_labels_aux(labels, labels_to_merge, worst_cluster, [worst_cluster, found_clusters])
 
             found_clusters += 1
 
@@ -61,7 +61,7 @@ class BisectingKMeansAlgorithm(UnsupervisedAlgorithm):
     def ssd(self, values: np.ndarray):
         return np.sum((values - np.average(values, axis=0)) ** 2)
 
-    def merge_labels(self, og: np.ndarray, new: np.ndarray, num_to_replace: int, nums_to_insert: list):
+    def merge_labels_aux(self, og: np.ndarray, new: np.ndarray, num_to_replace: int, nums_to_insert: list):
         iter_new = 0
         # Iterate over og. When finding a value equal to num_to_replace, replace by nums_to_insert
         # according to the first non-visited element of new
